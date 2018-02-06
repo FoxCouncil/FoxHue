@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Drawing;
 using System.IO;
 using System.Linq;
 using System.Net;
@@ -19,6 +20,7 @@ namespace FoxHue
         private const string KEYS_DB_FILENAME = "k.dat";
 
         // Win32 UI
+        private FoxHueControl _control;
         private NotifyIcon _trayIcon;
 
         // Hue Bridge
@@ -43,7 +45,14 @@ namespace FoxHue
             Task.WaitAll(HueBridgeConnect());
             Task.WaitAll(HueGetLights());
 
+            ControlCreate();
+
             TrayIconCreate();
+        }
+
+        private void ControlCreate()
+        {
+            _control = new FoxHueControl(this);
         }
 
         private ILocalHueClient HueClientCurrent => _hueClients[_hueBridgeCurrent];
@@ -119,7 +128,7 @@ namespace FoxHue
             {
                 var lightMenuItem = new MenuItem
                 {
-                    Text = $"{light.Name}\t\t{(light.State.On ? "ON" : "OFF")}",
+                    Text = $"{light.Name}\t{(light.State.On ? "ON" : "OFF")}",
                     Tag = light
                 };
 
@@ -147,8 +156,6 @@ namespace FoxHue
             HueClientCurrent.SendCommandAsync(new LightCommand { On = !light.State.On }, new[] { light.Id }).Wait();
 
             HueGetLights().Wait();
-
-            ContextMenuGenerate();
         }
 
         private void TrayIconCreate()
@@ -156,21 +163,26 @@ namespace FoxHue
             // Initialize Tray Icon
             _trayIcon = new NotifyIcon { Icon = Resources.FoxHueIcon };
 
-            _trayIcon.MouseClick += (sender, args) =>
+            _trayIcon.MouseUp += (sender, args) =>
             {
-                ContextMenuGenerate();
-
-                if (args.Button != MouseButtons.Left)
+                if (args.Button != MouseButtons.Left || _control.Visible)
                 {
                     return;
                 }
 
-                var mi = typeof(NotifyIcon).GetMethod("ShowContextMenu", BindingFlags.Instance | BindingFlags.NonPublic);
+                if (_control.Location == Point.Empty)
+                {
+                    var pointToClient = _control.PointToClient(Cursor.Position);
+                    _control.Location = new Point(pointToClient.X - (_control.Width / 2), (pointToClient.Y - _control.Height) - 10);
+                }
 
-                mi.Invoke(_trayIcon, null);
+                _control.Show();
             };
 
-            ContextMenuGenerate();
+            _trayIcon.ContextMenu = new ContextMenu
+            {
+                MenuItems = { new MenuItem("&Exit", (sender, args) => Application.Exit()) }
+            };
 
             _trayIcon.Visible = true;
         }
