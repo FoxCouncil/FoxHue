@@ -20,7 +20,7 @@ namespace FoxHue
         private const string KEYS_DB_FILENAME = "k.dat";
 
         // Win32 UI
-        private FoxHueControl _control;
+        private FoxHueTrayForm _trayForm;
         private NotifyIcon _trayIcon;
 
         // Hue Bridge
@@ -31,7 +31,7 @@ namespace FoxHue
         private readonly Dictionary<IPAddress, Bridge> _hueBridges = new Dictionary<IPAddress, Bridge>();
 
         // Lights
-        private readonly List<Light> _hueLights = new List<Light>();
+        public readonly List<Light> HueLights = new List<Light>();
 
         public FoxHueContext()
         {
@@ -52,12 +52,12 @@ namespace FoxHue
 
         private void ControlCreate()
         {
-            _control = new FoxHueControl(this);
+            _trayForm = new FoxHueTrayForm(this);
         }
 
-        private ILocalHueClient HueClientCurrent => _hueClients[_hueBridgeCurrent];
+        public ILocalHueClient HueClientCurrent => _hueClients[_hueBridgeCurrent];
 
-        private Bridge HueBridgeCurrent => _hueBridges[_hueBridgeCurrent];
+        public Bridge HueBridgeCurrent => _hueBridges[_hueBridgeCurrent];
 
         private async Task HueBridgeFind()
         {
@@ -104,58 +104,13 @@ namespace FoxHue
             File.WriteAllText(KEYS_DB_FILENAME, JsonConvert.SerializeObject(_hueClientKeys, Formatting.Indented));
         }
 
-        private async Task HueGetLights()
+        public async Task HueGetLights()
         {
-            _hueLights.Clear();
-            _hueLights.AddRange(await HueClientCurrent.GetLightsAsync());
-        }
+            var lights = await HueClientCurrent.GetLightsAsync().ConfigureAwait(false);
 
-        private void ContextMenuGenerate()
-        {
-            if (_trayIcon == null)
-            {
-                return;
-            }
+            HueLights.Clear();
 
-            var newContextMenu = new ContextMenu();
-
-            newContextMenu.MenuItems.Add($"{HueBridgeCurrent.Config.Name} - {HueBridgeCurrent.Config.SoftwareVersion} - {HueBridgeCurrent.Config.IpAddress}");
-
-            newContextMenu.MenuItems.Add("-");
-
-            // Lights
-            foreach (var light in _hueLights)
-            {
-                var lightMenuItem = new MenuItem
-                {
-                    Text = $"{light.Name}\t{(light.State.On ? "ON" : "OFF")}",
-                    Tag = light
-                };
-
-                lightMenuItem.Click += LightButtonClient;
-
-                newContextMenu.MenuItems.Add(lightMenuItem);
-            }
-
-            newContextMenu.MenuItems.Add("-");
-
-            newContextMenu.MenuItems.Add(new MenuItem("&Exit", Exit));
-
-            _trayIcon.ContextMenu = newContextMenu;
-        }
-
-        private void LightButtonClient(object sender, EventArgs eventArgs)
-        {
-            if (!(sender is MenuItem menuItem))
-            {
-                return;
-            }
-
-            var light = (Light)menuItem.Tag;
-
-            HueClientCurrent.SendCommandAsync(new LightCommand { On = !light.State.On }, new[] { light.Id }).Wait();
-
-            HueGetLights().Wait();
+            HueLights.AddRange(lights);
         }
 
         private void TrayIconCreate()
@@ -165,18 +120,22 @@ namespace FoxHue
 
             _trayIcon.MouseUp += (sender, args) =>
             {
-                if (args.Button != MouseButtons.Left || _control.Visible)
+                if (args.Button != MouseButtons.Left || _trayForm.Visible)
                 {
                     return;
                 }
 
-                if (_control.Location == Point.Empty)
+                if (_trayForm.Location == Point.Empty)
                 {
-                    var pointToClient = _control.PointToClient(Cursor.Position);
-                    _control.Location = new Point(pointToClient.X - (_control.Width / 2), (pointToClient.Y - _control.Height) - 10);
+                    var pointToClient = _trayForm.PointToClient(Cursor.Position);
+                    _trayForm.Location = new Point(pointToClient.X - _trayForm.Width / 2, Screen.PrimaryScreen.Bounds.Height - _trayForm.Height - (Screen.PrimaryScreen.Bounds.Bottom - Screen.PrimaryScreen.WorkingArea.Bottom));
                 }
 
-                _control.Show();
+                HueGetLights().ConfigureAwait(false);
+
+                _trayForm.Show();
+                _trayForm.BringToFront();
+                _trayForm.Activate();
             };
 
             _trayIcon.ContextMenu = new ContextMenu
