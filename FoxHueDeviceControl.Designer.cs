@@ -31,6 +31,7 @@
             this.labelDeviceName = new System.Windows.Forms.Label();
             this.labelStateOn = new System.Windows.Forms.Label();
             this.trackBarDimmer = new System.Windows.Forms.TrackBar();
+            this.buttonColor = new System.Windows.Forms.Button();
             ((System.ComponentModel.ISupportInitialize)(this.trackBarDimmer)).BeginInit();
             this.SuspendLayout();
             // 
@@ -59,18 +60,33 @@
             // 
             // trackBarDimmer
             // 
-            this.trackBarDimmer.Location = new System.Drawing.Point(356, 10);
+            this.trackBarDimmer.Location = new System.Drawing.Point(356, 3);
             this.trackBarDimmer.Maximum = 254;
             this.trackBarDimmer.Name = "trackBarDimmer";
             this.trackBarDimmer.Size = new System.Drawing.Size(261, 69);
             this.trackBarDimmer.TabIndex = 4;
             this.trackBarDimmer.TickStyle = System.Windows.Forms.TickStyle.None;
             // 
+            // buttonColor
+            // 
+            this.buttonColor.FlatAppearance.BorderSize = 0;
+            this.buttonColor.FlatAppearance.MouseDownBackColor = System.Drawing.Color.Gray;
+            this.buttonColor.FlatAppearance.MouseOverBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(224)))), ((int)(((byte)(224)))), ((int)(((byte)(224)))));
+            this.buttonColor.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.buttonColor.ForeColor = System.Drawing.Color.Transparent;
+            this.buttonColor.Image = global::FoxHue.Properties.Resources.ColorPickerImage;
+            this.buttonColor.Location = new System.Drawing.Point(275, 0);
+            this.buttonColor.Name = "buttonColor";
+            this.buttonColor.Size = new System.Drawing.Size(42, 42);
+            this.buttonColor.TabIndex = 5;
+            this.buttonColor.UseVisualStyleBackColor = true;
+            // 
             // FoxHueDeviceControl
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(9F, 20F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(64)))), ((int)(((byte)(64)))), ((int)(((byte)(64)))));
+            this.Controls.Add(this.buttonColor);
             this.Controls.Add(this.trackBarDimmer);
             this.Controls.Add(this.labelStateOn);
             this.Controls.Add(this.labelDeviceName);
@@ -88,5 +104,6 @@
         public System.Windows.Forms.Label labelDeviceName;
         public System.Windows.Forms.Label labelStateOn;
         private System.Windows.Forms.TrackBar trackBarDimmer;
+        private System.Windows.Forms.Button buttonColor;
     }
 }

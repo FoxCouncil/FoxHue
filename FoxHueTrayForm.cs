@@ -46,9 +46,29 @@ namespace FoxHue
             };
         }
 
+        private void MakeRounded()
+        {
+            var bounds = new Rectangle(0, 0, Width, Height);
+
+            const int cornerRadius = 20;
+
+            var path = new System.Drawing.Drawing2D.GraphicsPath();
+
+            path.AddArc(bounds.X, bounds.Y, cornerRadius, cornerRadius, 180, 90);
+            path.AddArc(bounds.X + bounds.Width - cornerRadius, bounds.Y, cornerRadius, cornerRadius, 270, 90);
+            path.AddLine(bounds.X + bounds.Width, bounds.Y + bounds.Height, bounds.X + bounds.Width, bounds.Y + bounds.Height);
+            path.AddLine(bounds.X, bounds.Y + bounds.Height, bounds.X, bounds.Y + bounds.Height);
+
+            path.CloseAllFigures();
+
+            Region = new Region(path);
+        }
+
         private void InitializeUi()
         {
             labelBridgeName.Text = _context.HueBridgeCurrent.Config.Name;
+
+            MakeRounded();
 
             LoadLights();
         }
