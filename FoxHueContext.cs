@@ -20,7 +20,7 @@ namespace FoxHue
         private const string KEYS_DB_FILENAME = "k.dat";
 
         // Win32 UI
-        private FoxHueTrayForm _trayForm;
+        public FoxHueTrayForm TrayForm;
         private NotifyIcon _trayIcon;
 
         // Hue Bridge
@@ -52,7 +52,7 @@ namespace FoxHue
 
         private void ControlCreate()
         {
-            _trayForm = new FoxHueTrayForm(this);
+            TrayForm = new FoxHueTrayForm(this);
         }
 
         public ILocalHueClient HueClientCurrent => _hueClients[_hueBridgeCurrent];
@@ -120,22 +120,22 @@ namespace FoxHue
 
             _trayIcon.MouseUp += (sender, args) =>
             {
-                if (args.Button != MouseButtons.Left || _trayForm.Visible)
+                if (args.Button != MouseButtons.Left || TrayForm.Visible)
                 {
                     return;
                 }
 
-                if (_trayForm.Location == Point.Empty)
+                if (TrayForm.Location == Point.Empty)
                 {
-                    var pointToClient = _trayForm.PointToClient(Cursor.Position);
-                    _trayForm.Location = new Point(pointToClient.X - _trayForm.Width / 2, Screen.PrimaryScreen.Bounds.Height - _trayForm.Height - (Screen.PrimaryScreen.Bounds.Bottom - Screen.PrimaryScreen.WorkingArea.Bottom));
+                    var pointToClient = TrayForm.PointToClient(Cursor.Position);
+                    TrayForm.Location = new Point(pointToClient.X - TrayForm.Width / 2, Screen.PrimaryScreen.Bounds.Height - TrayForm.Height - (Screen.PrimaryScreen.Bounds.Bottom - Screen.PrimaryScreen.WorkingArea.Bottom));
                 }
 
                 HueGetLights().ConfigureAwait(false);
 
-                _trayForm.Show();
-                _trayForm.BringToFront();
-                _trayForm.Activate();
+                TrayForm.Show();
+                TrayForm.BringToFront();
+                TrayForm.Activate();
             };
 
             _trayIcon.ContextMenu = new ContextMenu

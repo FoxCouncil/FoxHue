@@ -88,8 +88,18 @@ namespace FoxHue
 
             buttonColor.Click += (sender, args) =>
             {
-                var colorDlg = new ColorDialog();
-                colorDlg.ShowDialog(this);
+                var newControl = new Control
+                {
+                    Width = 100,
+                    Height = 100,
+                    BackColor = Color.Red,
+                    ForeColor = Color.White
+                };
+
+                newControl.Controls.Add(new Label { Text = "Gayyy" });
+
+                _context.TrayForm.Controls.Add(newControl);
+
             };
         }
 
