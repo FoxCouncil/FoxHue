@@ -27,6 +27,7 @@ namespace FoxHue
             TopMost = true;
 
             buttonClose.Click += HandleHideForm;
+            buttonSettings.MouseUp += buttonSettings_MouseUp;
 
             _visibilityTimer.Tick += (sender, args) =>
             {
@@ -46,6 +47,15 @@ namespace FoxHue
             };
         }
 
+        private void InitializeUi()
+        {
+            labelBridgeName.Text = _context.HueBridgeCurrent.Config.Name;
+
+            MakeRounded();
+
+            LoadLights();
+        }
+
         private void MakeRounded()
         {
             var bounds = new Rectangle(0, 0, Width, Height);
@@ -62,15 +72,6 @@ namespace FoxHue
             path.CloseAllFigures();
 
             Region = new Region(path);
-        }
-
-        private void InitializeUi()
-        {
-            labelBridgeName.Text = _context.HueBridgeCurrent.Config.Name;
-
-            MakeRounded();
-
-            LoadLights();
         }
 
         private void LoadLights()
@@ -92,6 +93,14 @@ namespace FoxHue
         private void HandleHideForm(object sender, EventArgs args)
         {
             Hide();
+        }
+
+        private void buttonSettings_MouseUp(object sender, MouseEventArgs e)
+        {
+            if (!_context.SettingsForm.Visible)
+            {
+                _context.ContextMenu.Show(buttonSettings, Point.Empty);
+            }
         }
     }
 }

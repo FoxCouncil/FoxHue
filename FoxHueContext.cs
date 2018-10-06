@@ -21,6 +21,8 @@ namespace FoxHue
 
         // Win32 UI
         public FoxHueTrayForm TrayForm;
+        public FoxHueSettingsForm SettingsForm;
+        public ContextMenu ContextMenu;
         private NotifyIcon _trayIcon;
 
         // Hue Bridge
@@ -45,6 +47,16 @@ namespace FoxHue
             Task.WaitAll(HueBridgeConnect());
             Task.WaitAll(HueGetLights());
 
+            ContextMenu = new ContextMenu
+            {
+                MenuItems = {
+                    new MenuItem("&About", (sender, args) => MessageBox.Show("💡 Control Zee Lights! 💡\n\nLicense: MIT\n\nRepo: https://github.com/FoxCouncil/FoxHue", "About FoxHue")),
+                    new MenuItem("&Settings", (sender, args) => SettingsForm.Show(TrayForm)),
+                    new MenuItem("-"),
+                    new MenuItem("&Exit", (sender, args) => Application.Exit()),
+                }
+            };
+
             ControlCreate();
 
             TrayIconCreate();
@@ -53,6 +65,7 @@ namespace FoxHue
         private void ControlCreate()
         {
             TrayForm = new FoxHueTrayForm(this);
+            SettingsForm = new FoxHueSettingsForm(this);
         }
 
         public ILocalHueClient HueClientCurrent => _hueClients[_hueBridgeCurrent];
@@ -138,10 +151,7 @@ namespace FoxHue
                 TrayForm.Activate();
             };
 
-            _trayIcon.ContextMenu = new ContextMenu
-            {
-                MenuItems = { new MenuItem("&Exit", (sender, args) => Application.Exit()) }
-            };
+            _trayIcon.ContextMenu = ContextMenu;
 
             _trayIcon.Visible = true;
         }
