@@ -2,7 +2,7 @@
 💡 Control Zee Lights 💡
 
 # Description
-Let's you control Philips Hue lights/accessories/bridges from your Windows Desktop PC.
+Lets you control Philips Hue lights/accessories/bridges from your Windows Desktop PC.
 
 # Features
 - Control Lighs (State, Dim)
