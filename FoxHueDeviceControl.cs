@@ -1,4 +1,6 @@
-﻿using System;
+﻿// Copyright (c) 2018 Fox Council - License: MIT - https://github.com/FoxCouncil/FoxHue
+
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Drawing;
@@ -110,7 +112,7 @@ namespace FoxHue
         {
             if (!_isSettingDimmerValue)
             {
-                _context.HueClientCurrent.SendCommandAsync(new LightCommand { Brightness = (byte?)trackBarDimmer.Value }, new[] { _light.Id }).ConfigureAwait(false);
+                //_context.HueClientCurrent.SendCommandAsync(new LightCommand { Brightness = (byte?)trackBarDimmer.Value }, new[] { _light.Id }).ConfigureAwait(false);
             }
         }
 
@@ -119,7 +121,7 @@ namespace FoxHue
         /// <param name="e">The events default <c>EventArgs</c> object</param>
         private void HandleToggleOn(object sender, EventArgs e)
         {
-            _context.HueClientCurrent.SendCommandAsync(new LightCommand { On = !_light.State.On }, new[] { _light.Id }).ConfigureAwait(false);
+            //_context.HueClientCurrent.SendCommandAsync(new LightCommand { On = !_light.State.On }, new[] { _light.Id }).ConfigureAwait(false);
 
             UpdateState();
         }
@@ -147,7 +149,7 @@ namespace FoxHue
         /// <summary>Retrieve and handle the state.</summary>
         private async void UpdateState()
         {
-            _light = await _context.HueClientCurrent.GetLightAsync(_light.Id); // .ConfigureAwait(false);
+            //_light = await _context.HueClientCurrent.GetLightAsync(_light.Id); // .ConfigureAwait(false);
 
             this.InvokeIfRequired(() =>
             {

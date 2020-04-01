@@ -1,10 +1,13 @@
-﻿using System;
+﻿// Copyright (c) 2018 Fox Council - License: MIT - https://github.com/FoxCouncil/FoxHue
+
+using System;
 using System.ComponentModel;
+using System.Threading.Tasks;
 using System.Windows.Forms;
 
 namespace FoxHue
 {
-    public static class Program
+    public static class FoxHue
     {
         public static void InvokeIfRequired(this ISynchronizeInvoke obj, MethodInvoker action)
         {

@@ -1,0 +1,6 @@
+extensions: designer.cs generated.cs
+extensions: .cs .cpp .h
+// Copyright (c) 2018 Fox Council - License: MIT - https://github.com/FoxCouncil/FoxHue
+
+extensions:  .xml .config .xsd
+<!-- Copyright (c) 2018 Fox Council -->

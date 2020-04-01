@@ -1,4 +1,6 @@
-﻿using System;
+﻿// Copyright (c) 2018 Fox Council - License: MIT - https://github.com/FoxCouncil/FoxHue
+
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
@@ -49,7 +51,7 @@ namespace FoxHue
 
         private void InitializeUi()
         {
-            labelBridgeName.Text = _context.HueBridgeCurrent.Config.Name;
+            // labelBridgeName.Text = _context.HueBridgeCurrent.Config.Name;
 
             MakeRounded();
 

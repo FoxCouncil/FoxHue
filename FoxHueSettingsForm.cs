@@ -1,4 +1,6 @@
-﻿using Humanizer;
+﻿// Copyright (c) 2018 Fox Council - License: MIT - https://github.com/FoxCouncil/FoxHue
+
+using Humanizer;
 using Q42.HueApi;
 
 using System;
@@ -20,7 +22,7 @@ namespace FoxHue
 
             InitializeComponent();
 
-            labelBridgeName.Text = $"{_context.HueBridgeCurrent.Config.Name} ({_context.HueBridgeCurrent.Config.IpAddress})";
+            // labelBridgeName.Text = $"{_context.HueBridgeCurrent.Config.Name} ({_context.HueBridgeCurrent.Config.IpAddress})";
 
             // Whitelist Events
             Shown += (s, e) => RefreshWhitelist();
@@ -57,6 +59,11 @@ namespace FoxHue
 
             var maxLength = 0;
 
+            if (_whiteList == null)
+            {
+                return;
+            }
+
             foreach (var whitelist in _whiteList)
             {
                 maxLength = Math.Max(maxLength, whitelist.Name.Length);
@@ -92,14 +99,14 @@ namespace FoxHue
         {
             foreach (var entry in whitelistEntries)
             {
-                var success = await _context.HueClientCurrent.DeleteWhiteListEntryAsync(entry).ConfigureAwait(false);
+                //var success = await _context.HueClientCurrent.DeleteWhiteListEntryAsync(entry).ConfigureAwait(false);
             }
         }
 
         private async Task DoRefreshWhitelist()
         {
-            var newWhitelist = await _context.HueClientCurrent.GetWhiteListAsync().ConfigureAwait(false);
-            _whiteList = newWhitelist.ToList();
+            //var newWhitelist = await _context.HueClientCurrent.GetWhiteListAsync().ConfigureAwait(false);
+            //_whiteList = newWhitelist.ToList();
         }
     }
 }
